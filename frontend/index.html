@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Incidents Management System</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- Marker Cluster CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/shapefile@0.6.6/dist/shapefile.js"></script>
+  <!-- Marker Cluster JS -->
+  <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
+  <!--here using Omnivore plugin for adding geojson files-->
+  <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
+  
+  <style>
+    .state-tooltip {
+        background-color: #e8ef82;
+        color: rgb(0, 34, 255);
+        font-weight: bold;
+        font-size: 12px;
+        border-radius: 4px;
+        padding: 2px 6px;
+        border-color: black;
+    }
+    .district-tooltip {
+        background-color: #e8ef82;
+        color: rgb(255, 0, 0);
+        font-weight: bold;
+        font-size: 12px;
+        border-radius: 4px;
+        padding: 2px 6px;
+        border-color: black;
+    }
+</style>
+
+</head>
+<body>
+  <h1>Incidents Management System</h1>
+
+  <div id="filters">
+    <select id="districtFilter">
+
+      <option value="">--Select District--</option>
+      <option>Bhind</option>
+      <option>Sagar</option>
+      <option>Narsinghpur</option>
+      <option>Betul</option>
+      <option>Khargone</option>
+      <option>Burhanpur</option>
+      <option>Datia</option>
+      <option>Barwani</option>
+      <option>Mandsaur</option>
+      <option>Tikamgarh</option>
+      <option>Singrauli</option>
+      <option>Dewas</option>
+      <option>Jabalpur</option>
+      <option>Damoh</option>
+      <option>Guna</option>
+      <option>Sidhi</option>
+      <option>Khandwa</option>
+      <option>Chhindwara</option>
+      <option>Ashoknagar</option>
+      <option>Dhar</option>
+      <option>Jhabua</option>
+      <option>Rajgarh</option>
+      <option>Morena</option>
+      <option>Bhopal</option>
+      <option>Katni</option>
+      <option>Vidisha</option>
+      <option>Rewa</option>
+      <option>Indore</option>
+      <option>Balaghat</option>
+      <option>Shajapur</option>
+      <option>Mandla</option>
+      <option>Raisen</option>
+      <option>Anuppur</option>
+      <option>Shivpuri</option>
+      <option>Gwalior</option>
+      <option>Seoni</option>
+      <option>Sheopur</option>
+      <option>Dindori</option>
+      <option>Satna</option>
+      <option>Sehore</option>
+      <option>Panna</option>
+      <option>Shahdol</option>
+      <option>Chhatarpur</option>
+      <option>Agar</option>
+      <option>Hoshangabad</option>
+      <option>Neemuch</option>
+      <option>Umaria</option>
+      <option>Ujjain</option>
+      <option>Harda</option>
+      <option>Ratlam</option>
+      <option>Alirajpur</option>
+
+    </select>
+
+    <select id="complaintFilter">
+      <option value="">-- Select Complaint --</option>
+      <option value="Institutional deliveries">Institutional deliveries</option>
+      <option value="Fever">Fever</option>
+      <option value="Overdose / Poisoning">Overdose / Poisoning</option>
+      <option value="Pain in Abdomen / Stomach">Pain in Abdomen / Stomach</option>
+      <option value="Attack / Assault / Trauma">Attack / Assault / Trauma</option>
+      <option value="Pregnancy - High Risk Pregnancy Complication">Pregnancy - High Risk Pregnancy Complication</option>
+      <option value="RTA - Road Traffic Accident">RTA - Road Traffic Accident</option>
+      <option value="Referral of sick - Children/Infacts/Newborns">Referral of sick - Children/Infacts/Newborns</option>
+      <option value="Chest Pain">Chest Pain</option>
+      <option value="ANC Check-ups">ANC Check-ups</option>
+      <option value="Animal Bite [Snake / Insect ]">Animal Bite [Snake / Insect ]</option>
+      <option value="Child Patient / Pediatric Patient">Child Patient / Pediatric Patient</option>
+      <option value="Other">Other</option>
+      <option value="Breathing Difficulty">Breathing Difficulty</option>
+      <option value="Pregnancy - Post Delivery Complications">Pregnancy - Post Delivery Complications</option>
+      <option value="Body Pain / Swelling">Body Pain / Swelling</option>
+      <option value="Urine Problem">Urine Problem</option>
+      <option value="Low Sugar Level">Low Sugar Level</option>
+      <option value="Abnormal Behavior">Abnormal Behavior</option>
+      <option value="Unconscious / Unresponsive Patient">Unconscious / Unresponsive Patient</option>
+      <option value="Hematemesis [Vomiting Blood]">Hematemesis [Vomiting Blood]</option>
+      <option value="Loosemotion-Vomiting">Loosemotion-Vomiting</option>
+      <option value="Diarrhea / Loose Motions">Diarrhea / Loose Motions</option>
+      <option value="Paralysis / Stroke">Paralysis / Stroke</option>
+      <option value="Pregnancy - Baby Delivered">Pregnancy - Baby Delivered</option>
+      <option value="NULL">NULL</option>
+      <option value="Vomiting">Vomiting</option>
+      <option value="Dizziness">Dizziness</option>
+      <option value="Heat Stroke">Heat Stroke</option>
+      <option value="Electrocution / Lightning Strike">Electrocution / Lightning Strike</option>
+      <option value="Fall from Height">Fall from Height</option>
+      <option value="Giddiness / Fainting">Giddiness / Fainting</option>
+      <option value="Suicide Attempt">Suicide Attempt</option>
+      <option value="Burns">Burns</option>
+      <option value="Allergic Reaction">Allergic Reaction</option>
+    </select>
+
+    <select id="callTypeFilter">
+      <option value="">-- Select Call Type --</option>
+
+      <option>Pickup Call</option>
+      <option>Emergency Call</option>
+      <option>Hospital To Hospital Transfer Call</option>
+      <option>Drop Back</option>
+      <option>MCI Call / Disaster Call</option>
+      <option>VIP Call</option>
+    </select>
+  </div>
+
+  <div id="map"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
